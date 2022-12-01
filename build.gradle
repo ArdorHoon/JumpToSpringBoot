@@ -20,6 +20,9 @@ dependencies {
     compileOnly("org.springframework.boot:spring-boot-devtools")
     //h2 데이터 베이스
     runtimeOnly 'com.h2database:h2'
+    //lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
