@@ -3,11 +3,12 @@ package com.jumptospring.example;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+//프로그램 시작 부분
 @SpringBootApplication
-public class MysiteApplication {
+public class ExampleApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MysiteApplication.class, args);
+        SpringApplication.run(ExampleApplication.class, args);
     }
 
 }
