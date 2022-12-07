@@ -3,9 +3,13 @@ package com.jumptospring.example.question;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -29,6 +33,34 @@ public class QuestionController {
         Question question = this.questionService.getQuestion(id);
         model.addAttribute("question", question);
         return "question_detail";
+    }
+
+    /**
+     * QuestionController의 GetMapping으로 매핑한 메서드도 다음과 같이 변경해야 한다.
+     * 왜냐하면 question_form.html 템플릿은 "질문 등록하기" 버튼을 통해 GET 방식으로 요청되더라도
+     * th:object에 의해 QuestionForm 객체가 필요하기 때문이다.
+     */
+    @GetMapping("/create")
+    public String questionCreate(QuestionForm questionForm) {
+        return "question_form";
+    }
+
+    /**
+     * @param questionForm
+     * @param bindingResult
+     * 자동으로 QuestionForm의 Subject, Content에 바인딩 된다. (스프링 바인딩 기능)
+     * @Vaild는 @NotEmpty, @Size 검증 BindingResult는 이로 인해 검증이 수행된 결과를 의미하는 객체
+     */
+    @PostMapping("/create")
+    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
+
+        //자동으로 QuestionForm의 subject, content에 바인딩된다. (스프링 프레임 워크의 바인딩 기능)
+        if (bindingResult.hasErrors()) {
+            return "question_form";
+        }
+
+        this.questionService.create(questionForm.getSubject(), questionForm.getContent());
+        return "redirect:/question/list";
     }
 
 }
