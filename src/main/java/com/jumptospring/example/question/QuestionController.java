@@ -1,14 +1,18 @@
 package com.jumptospring.example.question;
 
 import com.jumptospring.example.answer.AnswerForm;
+import com.jumptospring.example.uesr.SiteUser;
+import com.jumptospring.example.uesr.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 
@@ -18,6 +22,7 @@ import java.util.List;
 public class QuestionController {
 
     private final QuestionService questionService;
+    private final UserService userService;
 
     @RequestMapping("/list")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
@@ -39,6 +44,7 @@ public class QuestionController {
      * 왜냐하면 question_form.html 템플릿은 "질문 등록하기" 버튼을 통해 GET 방식으로 요청되더라도
      * th:object에 의해 QuestionForm 객체가 필요하기 때문이다.
      */
+    @PreAuthorize("isAuthenticated()") //로그아웃 상태에서는 로그인 페이지로 간다.
     @GetMapping("/create")
     public String questionCreate(QuestionForm questionForm) {
         return "question_form";
@@ -49,15 +55,17 @@ public class QuestionController {
      * @param bindingResult 자동으로 QuestionForm의 Subject, Content에 바인딩 된다. (스프링 바인딩 기능)
      * @Vaild는 @NotEmpty, @Size 검증 BindingResult는 이로 인해 검증이 수행된 결과를 의미하는 객체
      */
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
+    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult, Principal principal) {
 
         //자동으로 QuestionForm의 subject, content에 바인딩된다. (스프링 프레임 워크의 바인딩 기능)
         if (bindingResult.hasErrors()) {
             return "question_form";
         }
 
-        this.questionService.create(questionForm.getSubject(), questionForm.getContent());
+        SiteUser author = this.userService.getUser(principal.getName());
+        this.questionService.create(questionForm.getSubject(), questionForm.getContent(), author);
         return "redirect:/question/list";
     }
 

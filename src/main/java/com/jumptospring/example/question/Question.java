@@ -1,6 +1,7 @@
 package com.jumptospring.example.question;
 
 import com.jumptospring.example.answer.Answer;
+import com.jumptospring.example.uesr.SiteUser;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,9 @@ public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @ManyToOne
+    private SiteUser author;
 
     @Column(length = 200)
     private String subject;

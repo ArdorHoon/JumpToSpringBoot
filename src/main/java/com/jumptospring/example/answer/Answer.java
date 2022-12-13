@@ -1,6 +1,7 @@
 package com.jumptospring.example.answer;
 
 import com.jumptospring.example.question.Question;
+import com.jumptospring.example.uesr.SiteUser;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +21,9 @@ public class Answer {
 
     @ManyToOne
     private Question question;
+
+    @ManyToOne
+    private SiteUser author;
 
     private LocalDateTime createDate;
 }
