@@ -1,5 +1,6 @@
 package com.jumptospring.example.question;
 
+import com.jumptospring.example.ScriptUtils;
 import com.jumptospring.example.answer.AnswerForm;
 import com.jumptospring.example.uesr.SiteUser;
 import com.jumptospring.example.uesr.UserService;
@@ -13,7 +14,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.security.Principal;
 
 
@@ -86,7 +89,7 @@ public class QuestionController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String questionModify(@Valid QuestionForm questionForm, @PathVariable("id") Integer id, Principal principal, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "question_form";
         }
 
@@ -100,14 +103,32 @@ public class QuestionController {
 
     @PreAuthorize("isAuthenticated()") //로그아웃 상태에서는 로그인 페이지로 간다.
     @GetMapping("/delete/{id}")
-    public String questionDelete(Principal principal, @PathVariable("id") Integer id){
+    public String questionDelete(Principal principal, @PathVariable("id") Integer id) {
         Question question = this.questionService.getQuestion(id);
 
-        if(!question.getAuthor().getUsername().equals(principal.getName())){
+        if (!question.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.questionService.delete(question);
         return "redirect:/";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/vote/{id}")
+    public String questionVote(Principal principal, @PathVariable("id") Integer id, HttpServletResponse response) throws IOException {
+        Question question = this.questionService.getQuestion(id);
+
+        if (!question.getAuthor().getUsername().equals(principal.getName())) {
+            SiteUser siteUser = this.userService.getUser(principal.getName());
+            this.questionService.vote(question, siteUser);
+        } else {
+            /**
+             * alert 창 후 이동하지 않는 문제가 있음
+             */
+            // ScriptUtils.alertAndMovePage(response, "작성자는 추천이 불가합니다.", String.format("redirect:/question/detail/%s", id));
+        }
+
+        return String.format("redirect:/question/detail/%s", id);
     }
 
 }
