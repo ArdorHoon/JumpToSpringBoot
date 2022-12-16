@@ -1,6 +1,5 @@
 package com.jumptospring.example.question;
 
-import com.jumptospring.example.ScriptUtils;
 import com.jumptospring.example.answer.AnswerForm;
 import com.jumptospring.example.uesr.SiteUser;
 import com.jumptospring.example.uesr.UserService;
@@ -29,10 +28,12 @@ public class QuestionController {
     private final UserService userService;
 
     @RequestMapping("/list")
-    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
-        Page<Question> paging = this.questionService.getList(page);
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
+                       @RequestParam(value = "kw", defaultValue = "") String kw) {
+        Page<Question> paging = this.questionService.getList(page, kw);
         //Model 객체는 자바 클래스와 템플릿 간의 연결고리 역할을 한다. Model 객체에 값을 담아두면 템플릿에서 그 값을 사용할 수 있다.
         model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw);
         return "question_list";
     }
 
