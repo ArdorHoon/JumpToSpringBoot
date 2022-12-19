@@ -38,8 +38,12 @@ public class QuestionController {
     }
 
     @RequestMapping(value = "/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm) {
+    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm,  Principal principal) {
         Question question = this.questionService.getQuestion(id);
+        //조회 수 증가 (비로그인 & 작성자 제외)
+        if(principal != null && !question.getAuthor().getUsername().equals(principal.getName())) {
+            this.questionService.incrementView(question);
+        }
         model.addAttribute("question", question);
         return "question_detail";
     }

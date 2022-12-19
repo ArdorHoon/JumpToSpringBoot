@@ -91,4 +91,9 @@ public class QuestionService {
 
         };
     }
+
+    public void incrementView(Question question){
+        question.setView(question.getView()+1);
+        this.questionRepository.save(question);
+    }
 }

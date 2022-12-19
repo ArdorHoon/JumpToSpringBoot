@@ -4,6 +4,7 @@ import com.jumptospring.example.answer.Answer;
 import com.jumptospring.example.uesr.SiteUser;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@DynamicInsert
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +34,9 @@ public class Question {
 
     @ManyToMany
     Set<SiteUser> voter;
+
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int view;
 
     private LocalDateTime createDate;
 
