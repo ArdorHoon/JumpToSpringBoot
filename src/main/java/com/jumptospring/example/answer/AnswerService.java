@@ -4,9 +4,15 @@ import com.jumptospring.example.error.DataNotFoundException;
 import com.jumptospring.example.question.Question;
 import com.jumptospring.example.uesr.SiteUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -14,6 +20,29 @@ import java.util.Optional;
 public class AnswerService {
 
     private final AnswerRepository answerRepository;
+
+    public static final int CREATE_DATE_ORDER = 100;
+    public static final int RECOMMEND_ORDER = 101;
+
+    public Page<Answer> getList(int page, Question question, int order){
+        List<Sort.Order> sorts = new ArrayList<>();
+
+        if(order == CREATE_DATE_ORDER){
+            sorts.add(Sort.Order.desc("createDate"));
+        }else{
+            sorts.add(Sort.Order.desc("voter"));
+        }
+
+        Pageable pageable = PageRequest.of(page, 3, Sort.by(sorts));
+        return this.answerRepository.findAllByQuestion(question, pageable);
+    }
+
+    public Page<Answer> getList(int page, Question question){
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+        Pageable pageable = PageRequest.of(page, 3, Sort.by(sorts));
+        return this.answerRepository.findAllByQuestion(question, pageable);
+    }
 
     public Answer create(Question question, String content, SiteUser author) {
         Answer answer = new Answer();

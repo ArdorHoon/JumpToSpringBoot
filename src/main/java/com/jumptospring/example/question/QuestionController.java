@@ -1,6 +1,8 @@
 package com.jumptospring.example.question;
 
+import com.jumptospring.example.answer.Answer;
 import com.jumptospring.example.answer.AnswerForm;
+import com.jumptospring.example.answer.AnswerService;
 import com.jumptospring.example.uesr.SiteUser;
 import com.jumptospring.example.uesr.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,8 @@ public class QuestionController {
     private final QuestionService questionService;
     private final UserService userService;
 
+    private final AnswerService answerService;
+
     @RequestMapping("/list")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "kw", defaultValue = "") String kw) {
@@ -38,12 +42,17 @@ public class QuestionController {
     }
 
     @RequestMapping(value = "/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm,  Principal principal) {
+    public String detail(Model model,
+                         @RequestParam(value = "page", defaultValue = "0") int page,
+                         @PathVariable("id") Integer id,
+                         AnswerForm answerForm,  Principal principal) {
         Question question = this.questionService.getQuestion(id);
         //조회 수 증가 (비로그인 & 작성자 제외)
         if(principal != null && !question.getAuthor().getUsername().equals(principal.getName())) {
             this.questionService.incrementView(question);
         }
+        Page<Answer> paging = this.answerService.getList(page, question);
+        model.addAttribute("paging", paging);
         model.addAttribute("question", question);
         return "question_detail";
     }
