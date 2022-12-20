@@ -23,21 +23,15 @@ public class AnswerService {
     public static final String RECOMMEND_ORDER = "recommend";
     private final AnswerRepository answerRepository;
 
-    private List<Sort.Order> getCommentOrderType(String so) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        switch (so) {
-            case RECOMMEND_ORDER:
-                sorts.add(Sort.Order.desc("voter"));
-                break;
-            default:
-                sorts.add(Sort.Order.desc("createDate"));
-                break;
-        }
-        return sorts;
-    }
-
     public Page<Answer> getList(int page, Question question, String so) {
-        Pageable pageable = PageRequest.of(page, 3, Sort.by(getCommentOrderType(so)));
+        List<Sort.Order> sorts = new ArrayList<>();
+
+        if (RECOMMEND_ORDER.equals(so)) {
+            sorts.add(Sort.Order.desc("voter"));
+        } else {
+            sorts.add(Sort.Order.desc("createDate"));
+        }
+        Pageable pageable = PageRequest.of(page, 3, Sort.by(sorts));
         return this.answerRepository.findAllByQuestion(question, pageable);
     }
 
