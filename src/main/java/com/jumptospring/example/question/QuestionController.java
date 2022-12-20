@@ -43,6 +43,7 @@ public class QuestionController {
 
     @RequestMapping(value = "/detail/{id}")
     public String detail(Model model,
+                         @RequestParam(value = "so", defaultValue = "recent") String so,
                          @RequestParam(value = "page", defaultValue = "0") int page,
                          @PathVariable("id") Integer id,
                          AnswerForm answerForm,  Principal principal) {
@@ -51,9 +52,10 @@ public class QuestionController {
         if(principal != null && !question.getAuthor().getUsername().equals(principal.getName())) {
             this.questionService.incrementView(question);
         }
-        Page<Answer> paging = this.answerService.getList(page, question);
+        Page<Answer> paging = this.answerService.getList(page, question, so);
         model.addAttribute("paging", paging);
         model.addAttribute("question", question);
+        model.addAttribute("so", so);
         return "question_detail";
     }
 

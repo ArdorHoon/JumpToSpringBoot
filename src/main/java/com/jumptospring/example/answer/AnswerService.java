@@ -19,28 +19,25 @@ import java.util.Optional;
 @Service
 public class AnswerService {
 
+    public static final String RECENT_ORDER = "recent";
+    public static final String RECOMMEND_ORDER = "recommend";
     private final AnswerRepository answerRepository;
 
-    public static final int CREATE_DATE_ORDER = 100;
-    public static final int RECOMMEND_ORDER = 101;
-
-    public Page<Answer> getList(int page, Question question, int order){
+    private List<Sort.Order> getCommentOrderType(String so) {
         List<Sort.Order> sorts = new ArrayList<>();
-
-        if(order == CREATE_DATE_ORDER){
-            sorts.add(Sort.Order.desc("createDate"));
-        }else{
-            sorts.add(Sort.Order.desc("voter"));
+        switch (so) {
+            case RECOMMEND_ORDER:
+                sorts.add(Sort.Order.desc("voter"));
+                break;
+            default:
+                sorts.add(Sort.Order.desc("createDate"));
+                break;
         }
-
-        Pageable pageable = PageRequest.of(page, 3, Sort.by(sorts));
-        return this.answerRepository.findAllByQuestion(question, pageable);
+        return sorts;
     }
 
-    public Page<Answer> getList(int page, Question question){
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createDate"));
-        Pageable pageable = PageRequest.of(page, 3, Sort.by(sorts));
+    public Page<Answer> getList(int page, Question question, String so) {
+        Pageable pageable = PageRequest.of(page, 3, Sort.by(getCommentOrderType(so)));
         return this.answerRepository.findAllByQuestion(question, pageable);
     }
 
@@ -70,12 +67,12 @@ public class AnswerService {
         this.answerRepository.save(answer);
     }
 
-    public void delete(Answer answer){
+    public void delete(Answer answer) {
         this.answerRepository.delete(answer);
     }
 
 
-    public void vote(Answer answer, SiteUser siteUser){
+    public void vote(Answer answer, SiteUser siteUser) {
         answer.getVoter().add(siteUser);
         this.answerRepository.save(answer);
     }

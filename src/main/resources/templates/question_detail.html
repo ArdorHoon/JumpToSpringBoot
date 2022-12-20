@@ -35,13 +35,13 @@
         </div>
     </div>
     <!-- 답변의 갯수 표시 -->
-    <div class="d-flex justify-content-between pt-4">
+    <div class="d-flex justify-content-between pt-4" id="answer_start">
         <h3 class="my-3 py-2"
             th:text="|${#lists.size(question.answerList)}개의 답변이 있습니다.|"></h3>
 
         <div class="btn-group my-3 py-2" role="group" aria-label="Basic example">
-            <button type="button" class="so-link btn btn-primary btn-sm so" data-so="recent">최신순</button>
-            <button type="button" class="so-link btn btn-primary btn-sm so" data-so="recommend">추천순</button>
+            <button type="button" class="so-link btn btn-primary btn-sm so" th:data-so="recent">최신순</button>
+            <button type="button" class="so-link btn btn-primary btn-sm so" th:data-so="recommend">추천순</button>
         </div>
     </div>
     <!-- 답변 반복 시작 -->
@@ -101,9 +101,10 @@
             </li>
         </ul>
     </div>
-    <!-- 페이징처리 끝 -->
-    <form th:action="@{|/question/detail/${question.id}|}" method="get" id="searchForm">
+    <!-- 페이징처리, 답변 정렬 끝 -->
+    <form th:action="@{|/question/detail/${question.id}#answer_start|}" method="get" id="searchForm">
         <input type="hidden" id="page" name="page" th:value="${paging.number}">
+        <input type="hidden" id="so" name="so" th:value="${so}">
     </form>
 
     <!-- 답변 작성 -->
@@ -124,11 +125,8 @@
     const so_elements = document.getElementsByClassName("so-link");
     Array.from(so_elements).forEach(function (element) {
         element.addEventListener('click', function () {
-            if (this.dataset.so === 'recent') {
-                console.log('recent');
-            } else {
-                console.log('recommend');
-            }
+            document.getElementById('so').value = this.dataset.so;
+            document.getElementById('searchForm').submit();
         });
     });
 
