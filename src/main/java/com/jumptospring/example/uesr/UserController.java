@@ -1,15 +1,23 @@
 package com.jumptospring.example.uesr;
 
 
+import com.jumptospring.example.answer.Answer;
+import com.jumptospring.example.answer.AnswerService;
+import com.jumptospring.example.question.Question;
+import com.jumptospring.example.question.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.security.Principal;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -18,6 +26,22 @@ public class UserController {
 
     private final UserService userService;
 
+    private final QuestionService questionService;
+
+    private final AnswerService answerService;
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/info")
+    public String getInfo(Model model, Principal principal){
+        SiteUser user = this.userService.getUser(principal.getName());
+        List<Question> questionList = this.questionService.getQuestions(user);
+        List<Answer> answerList = this.answerService.getListByAuthor(user);
+
+        model.addAttribute("answers", answerList);
+        model.addAttribute("questions", questionList);
+        model.addAttribute("user", user);
+        return "user_info";
+    }
 
     @GetMapping("/login")
     public String login() {

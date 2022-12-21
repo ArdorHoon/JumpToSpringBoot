@@ -35,6 +35,17 @@ public class AnswerService {
         return this.answerRepository.findAllByQuestion(question, pageable);
     }
 
+    public List<Answer> getListByAuthor(SiteUser user){
+        Optional<List<Answer>> answers = this.answerRepository.findAllByAuthor(user);
+
+        if(answers.isPresent()){
+            return answers.get();
+        }else{
+            throw new DataNotFoundException("answers not found");
+        }
+
+    }
+
     public Answer create(Question question, String content, SiteUser author) {
         Answer answer = new Answer();
         answer.setContent(content);

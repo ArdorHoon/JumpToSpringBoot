@@ -1,5 +1,6 @@
 package com.jumptospring.example.question;
 
+import com.jumptospring.example.uesr.SiteUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -8,9 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
     Question findBySubject(String subject);
+
+    Optional<List<Question>> findAllByAuthor(SiteUser author);
 
     Question findBySubjectAndContent(String subject, String content);
 
