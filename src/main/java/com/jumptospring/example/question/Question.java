@@ -1,6 +1,7 @@
 package com.jumptospring.example.question;
 
 import com.jumptospring.example.answer.Answer;
+import com.jumptospring.example.comment.Comment;
 import com.jumptospring.example.uesr.SiteUser;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,6 +32,9 @@ public class Question {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answerList;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    private List<Comment> commentList;
 
     @ManyToMany
     Set<SiteUser> voter;
