@@ -1,5 +1,6 @@
 package com.jumptospring.example.comment;
 
+import com.jumptospring.example.answer.Answer;
 import com.jumptospring.example.answer.AnswerService;
 import com.jumptospring.example.question.Question;
 import com.jumptospring.example.question.QuestionService;
@@ -29,9 +30,9 @@ public class CommentController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create/question/{id}")
-    public String createCommentInQuestion(Model model, @PathVariable("id") Integer id,
-                               @Valid CommentForm commentForm,
-                               BindingResult bindingResult, Principal principal) {
+    public String createAboutQuestion(Model model, @PathVariable("id") Integer id,
+                                      @Valid CommentForm commentForm,
+                                      BindingResult bindingResult, Principal principal) {
 
         Question question = this.questionService.getQuestion(id);
         SiteUser siteUser = this.userService.getUser(principal.getName());
@@ -43,5 +44,24 @@ public class CommentController {
 
         Comment comment = this.commentService.create(question, commentForm.getContent(), siteUser);
         return String.format("redirect:/question/detail/%s", comment.getQuestion().getId());
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/create/answer/{id}")
+    public String createAboutAnswer(Model model, @PathVariable("id") Integer id,
+                                    @Valid CommentForm commentForm,
+                                    BindingResult bindingResult, Principal principal) {
+        Answer answer = this.answerService.getAnswer(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        Question question = answer.getQuestion();
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("question", question);
+            return "question_detail";
+        }
+
+        Comment comment = this.commentService.create(answer, commentForm.getContent(), siteUser);
+
+        return String.format("redirect:/question/detail/%s#answer_%s", comment.getAnswer().getQuestion().getId(), comment.getAnswer().getId());
     }
 }
