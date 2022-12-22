@@ -22,6 +22,9 @@ public class Comment {
     private Answer answer;
 
     @ManyToOne
+    private Question question;
+
+    @ManyToOne
     private SiteUser author;
 
     @Column(columnDefinition = "TEXT")

@@ -3,6 +3,7 @@ package com.jumptospring.example.question;
 import com.jumptospring.example.answer.Answer;
 import com.jumptospring.example.answer.AnswerForm;
 import com.jumptospring.example.answer.AnswerService;
+import com.jumptospring.example.comment.CommentForm;
 import com.jumptospring.example.uesr.SiteUser;
 import com.jumptospring.example.uesr.UserService;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +47,7 @@ public class QuestionController {
                          @RequestParam(value = "so", defaultValue = "recent") String so,
                          @RequestParam(value = "page", defaultValue = "0") int page,
                          @PathVariable("id") Integer id,
-                         AnswerForm answerForm,  Principal principal) {
+                         AnswerForm answerForm, CommentForm commentForm, Principal principal) {
         Question question = this.questionService.getQuestion(id);
         //조회 수 증가 (비로그인 & 작성자 제외)
         if(principal != null && !question.getAuthor().getUsername().equals(principal.getName())) {

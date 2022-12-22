@@ -23,6 +23,10 @@
                     추천
                     <span class="badge rounded-pill bg-success" th:text="${#lists.size(question.voter)}"></span>
                 </a>
+                <a href="javascript:void(0);" class="comment btn btn-sm btn-outline-secondary">
+                    댓글
+                    <span class="badge rounded-pill bg-secondary" th:text="${#lists.size(question.commentList)}"></span>
+                </a>
                 <a th:href="@{|/question/modify/${question.id}|}" class="btn btn-sm btn-outline-secondary"
                    sec:authorize="isAuthenticated()"
                    th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
@@ -32,6 +36,38 @@
                    th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
                    th:text="삭제"></a>
             </div>
+            <!-- 댓글 창-->
+            <ul class="list-group">
+                <li th:each="comments: ${question.getCommentList()}" class="comment-item list-group-item">
+                    <div class="d-flex mb-3">
+                        <div class="me-auto p-2" th:text="${comments.content}"></div>
+                        <div class="badge bg-light text-dark p-2 text-start">
+                            <div class="mb-2">
+                                <span th:if="${comments.author != null}" th:text="${comments.author.username}"></span>
+                            </div>
+                            <div th:text="${#temporals.format(comments.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <!-- 댓글 창 끝-->
+            <!-- 댓글 등록 창-->
+            <div class="comment_block" style="display: none">
+                <div class="form-floating comment_box" sec:authorize="isAuthenticated()">
+                    <form th:action="@{|/comment/create/question/${question.id}|}" th:object="${commentForm}"
+                          method="post"
+                          class="my-3">
+                        <div th:replace="form_errors :: formErrorsFragment"></div>
+                        <textarea th:field="*{content}" class="form-control"
+                                  placeholder="Leave a comment here"></textarea>
+                        <input type="submit" value="댓글 등록" class="btn btn-primary my-2">
+                    </form>
+                </div>
+                <div class="my-2 alert alert-warning" sec:authorize="isAnonymous()" id="comment_warning">
+                    <small>댓글 작성은 로그인이 필요합니다.</small>
+                </div>
+            </div>
+            <!-- 댓글 등록 창 끝-->
         </div>
     </div>
     <!-- 답변의 갯수 표시 -->
@@ -158,5 +194,19 @@
         });
     });
 
+    const comment_elements = document.getElementsByClassName("comment");
+    const block = document.getElementsByClassName("comment_block");
+    Array.from(comment_elements).forEach(function (element) {
+        element.addEventListener('click', function () {
+            Array.from(block).forEach((x) => {
+                if (x.style.display === "none") {
+                    x.style.display = "block";
+                } else
+                    x.style.display = "none";
+            })
+        });
+    });
+
 </script>
-</html>
+
+
