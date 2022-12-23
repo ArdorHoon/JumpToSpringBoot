@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -49,6 +50,8 @@ public class CommentController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create/answer/{id}")
     public String createAboutAnswer(Model model, @PathVariable("id") Integer id,
+                                    @RequestParam(value = "so", defaultValue = "recent") String so,
+                                    @RequestParam(value = "page", defaultValue = "0") int page,
                                     @Valid CommentForm commentForm,
                                     BindingResult bindingResult, Principal principal) {
         Answer answer = this.answerService.getAnswer(id);
@@ -61,7 +64,7 @@ public class CommentController {
         }
 
         Comment comment = this.commentService.create(answer, commentForm.getContent(), siteUser);
-
-        return String.format("redirect:/question/detail/%s#answer_%s", comment.getAnswer().getQuestion().getId(), comment.getAnswer().getId());
+        model.addAttribute("so", so);
+        return String.format("redirect:/question/detail/%s?page=%s&so=%s#answer_%s", comment.getAnswer().getQuestion().getId(), page, so, comment.getAnswer().getId());
     }
 }

@@ -105,7 +105,7 @@
                 <a href="javascript:void(0);" class="comment-answer btn btn-sm btn-outline-secondary"
                    th:data-num="${answer.id}">
                     댓글
-                    <span class="badge rounded-pill bg-secondary" th:text="${#lists.size(question.commentList)}"></span>
+                    <span class="badge rounded-pill bg-secondary" th:text="${#lists.size(answer.commentList)}"></span>
                 </a>
                 <a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
                    sec:authorize="isAuthenticated()"
@@ -143,6 +143,8 @@
                           class="my-3">
                         <div th:replace="form_errors :: formErrorsFragment"></div>
                         <textarea th:field="*{content}" class="form-control" placeholder="Leave a comment here"></textarea>
+                        <input type="hidden" name="page" th:value="${paging.number}">
+                        <input type="hidden" name="so" th:value="${so}">
                         <input type="submit" value="댓글 등록" class="btn btn-primary my-2">
                     </form>
                 </div>
