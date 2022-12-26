@@ -187,7 +187,7 @@
         <div th:replace="form_errors :: formErrorsFragment"></div>
         <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" class="form-control"
                   rows="10"></textarea>
-        <textarea sec:authorize="isAuthenticated()" th:field="*{content}" class="form-control" rows="10"></textarea>
+        <textarea sec:authorize="isAuthenticated()" th:field="*{content}" class="form-control" rows="10" id="markdown"></textarea>
         <!--
         sec:authorize="isAnonymous()" - 현재 로그아웃 상태
         sec:authorize="isAuthenticated()" - 현재 로그인 상태
@@ -196,6 +196,8 @@
     </form>
 </div>
 <script layout:fragment="script" type='text/javascript'>
+
+    const simpleMarkDownEditor = new SimpleMDE({ element: document.getElementById("markdown") });
 
     const so_elements = document.getElementsByClassName("so-link");
     Array.from(so_elements).forEach(function (element) {
