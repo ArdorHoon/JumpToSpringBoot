@@ -13,6 +13,7 @@
 - [ ] 최근 답변과 최근 댓글
 - [x] 조회 수
 - [x] 프로필
+- [x] 마크다운 에디터 
 - [ ] 비밀번호 찾기와 변경
 
 ## Skill
@@ -22,3 +23,4 @@
 * Spring Security
 * lombok
 * thymeleaf
+
