@@ -14,7 +14,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public SiteUser create(String username, String email, String password){
+    public SiteUser create(String username, String email, String password) {
         SiteUser user = new SiteUser();
         //BCrypt 해싱함수를 사용해서 암호화
 
@@ -25,12 +25,22 @@ public class UserService {
         return user;
     }
 
-    public SiteUser getUser(String username){
+    public void modifyPassword(SiteUser modifyUser, String password) {
+        modifyUser.setPassword(passwordEncoder.encode(password));
+        this.userRepository.save(modifyUser);
+    }
+
+    public boolean isSamePassword(SiteUser user, String password){
+        return passwordEncoder.matches(password, user.getPassword());
+    }
+
+
+    public SiteUser getUser(String username) {
         Optional<SiteUser> siteUser = this.userRepository.findByUsername(username);
 
-        if(siteUser.isPresent()){
+        if (siteUser.isPresent()) {
             return siteUser.get();
-        } else{
+        } else {
             throw new DataNotFoundException("siteUser not found");
         }
     }

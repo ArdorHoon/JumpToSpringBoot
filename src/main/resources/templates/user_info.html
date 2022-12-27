@@ -4,21 +4,30 @@
         <div><h2>프로필</h2>
         </div>
     </div>
-    <h4 class="py-2" th:text="${user.getUsername()}"></h4>
+    <div class="d-flex mb-3">
+        <div class="p-2">
+            <h4 class="py-2" th:text="${user.getUsername()}"></h4>
+        </div>
+        <div class="ms-auto p-2">
+            <a th:href="@{/user/modify/password}" class="btn btn-primary">비밀번호 변경하기</a>
+        </div>
+    </div>
+
     <div>
-    <h3 class="py-2">작성한 질문</h3>
-    <ul class="list-group">
-        <li th:each="question: ${questions}" class="question-item list-group-item">
-            <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
-        </li>
-    </ul>
+        <h3 class="py-2">작성한 질문</h3>
+        <ul class="list-group">
+            <li th:each="question: ${questions}" class="question-item list-group-item">
+                <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
+            </li>
+        </ul>
     </div>
     <br>
     <div>
         <h3 class="py-2">작성한 답변</h3>
         <ul class="list-group">
             <li th:each="answer: ${answers}" class="answer-item list-group-item">
-                <a th:href="@{|/question/detail/${answer.question.id}|}" th:text="|질문 : ${answer.question.subject}|" ></a>
+                <a th:href="@{|/question/detail/${answer.question.id}|}"
+                   th:text="|질문 : ${answer.question.subject}|"></a>
                 <p th:text="|답변 : ${answer.content}|"></p>
             </li>
         </ul>
