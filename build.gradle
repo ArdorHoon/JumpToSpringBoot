@@ -41,6 +41,8 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     //markdown
     implementation 'org.commonmark:commonmark:0.21.0'
+    //assertj
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.14.0'
 }
 
 tasks.named('test') {
