@@ -22,6 +22,9 @@ public class Question {
     private Integer id;
 
     @ManyToOne
+    private Category category;
+
+    @ManyToOne
     private SiteUser author;
 
     @Column(length = 200)

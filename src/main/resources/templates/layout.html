@@ -1,22 +1,33 @@
 <!doctype html>
 <html lang="ko" xmlns:th="http://www.w3.org/1999/html">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
-  <!-- sbb CSS -->
-  <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
-  <!--markdown editor-->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-  <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+    <!-- sbb CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+    <!--markdown editor-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 </head>
 <body>
 <nav th:replace="navbar :: navbarFragment"></nav>
-<!-- 기본 템플릿 안에 삽입될 내용 Start -->
-<th:block layout:fragment="content"></th:block>
-<!-- 기본 템플릿 안에 삽입될 내용 End -->
+
+<div class="container mt-3" style="height: auto !important;">
+    <div class="row" style="height: auto !important;">
+        <div class="col-sm-12 col-md-3 col-lg-2 p-2">
+            <nav th:replace="sidebar :: sidebarFragment"></nav>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-10 p-2">
+            <!-- 기본 템플릿 안에 삽입될 내용 Start -->
+            <th:block layout:fragment="content"></th:block>
+            <!-- 기본 템플릿 안에 삽입될 내용 End -->
+        </div>
+    </div>
+</div>
+
 <!-- Bootstrap JS -->
 <script th:src="@{/bootstrap.min.js}"></script>
 <!-- 자바스크립트 Start -->

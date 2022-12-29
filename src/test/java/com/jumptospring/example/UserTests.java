@@ -1,6 +1,5 @@
 package com.jumptospring.example;
 
-import com.jumptospring.example.answer.AnswerService;
 import com.jumptospring.example.uesr.SiteUser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -18,12 +17,12 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 public class UserTests {
 
     @Autowired
-    private  BCryptPasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder passwordEncoder;
 
 
     @ParameterizedTest
     @MethodSource("passwords")
-    void PasswordEqualTest(String password){
+    void PasswordEqualTest(String password) {
 
         SiteUser user = new SiteUser();
 
@@ -43,5 +42,4 @@ public class UserTests {
                 arguments("2222")
         );
     }
-
 }
