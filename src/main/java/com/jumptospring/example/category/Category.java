@@ -1,4 +1,4 @@
-package com.jumptospring.example.question;
+package com.jumptospring.example.category;
 
 import lombok.Getter;
 import lombok.Setter;

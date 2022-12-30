@@ -27,14 +27,6 @@ class ExampleApplicationTests {
     @Autowired
     private AnswerService answerService;
 
-    @Test
-    void testJpa() {
-        for (int i = 1; i <= 50; i++) {
-            String subject = String.format("[테스트] 임시 제목 입니다: [%03d]", i);
-            String content = "내용 없음";
-            this.questionService.create(subject, content, null);
-        }
-    }
 
     @DisplayName("잘못된 id로 Question 조회 테스트 Sample")
     @ParameterizedTest

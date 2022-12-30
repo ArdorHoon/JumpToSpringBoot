@@ -3,6 +3,8 @@ package com.jumptospring.example.question;
 import com.jumptospring.example.answer.Answer;
 import com.jumptospring.example.answer.AnswerForm;
 import com.jumptospring.example.answer.AnswerService;
+import com.jumptospring.example.category.Category;
+import com.jumptospring.example.category.CategoryService;
 import com.jumptospring.example.comment.CommentForm;
 import com.jumptospring.example.uesr.SiteUser;
 import com.jumptospring.example.uesr.UserService;
@@ -29,7 +31,7 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private final UserService userService;
-
+    private final CategoryService categoryService;
     private final AnswerService answerService;
 
     @RequestMapping("/list")
@@ -42,6 +44,20 @@ public class QuestionController {
         return "question_list";
     }
 
+    @RequestMapping("/list/{category}")
+    public String listByCategory(Model model,
+                                 @RequestParam(value = "page", defaultValue = "0") int page,
+                                 @PathVariable("category") String category,
+                                 @RequestParam(value = "kw", defaultValue = "") String kw) {
+        Page<Question> paging = this.questionService.getList(page, kw);
+        //Model 객체는 자바 클래스와 템플릿 간의 연결고리 역할을 한다. Model 객체에 값을 담아두면 템플릿에서 그 값을 사용할 수 있다.
+        model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw);
+        model.addAttribute("category", category);
+        return "question_list";
+    }
+
+
     @RequestMapping(value = "/detail/{id}")
     public String detail(Model model,
                          @RequestParam(value = "so", defaultValue = "recent") String so,
@@ -50,7 +66,7 @@ public class QuestionController {
                          AnswerForm answerForm, CommentForm commentForm, Principal principal) {
         Question question = this.questionService.getQuestion(id);
         //조회 수 증가 (비로그인 & 작성자 제외)
-        if(principal != null && !question.getAuthor().getUsername().equals(principal.getName())) {
+        if (principal != null && !question.getAuthor().getUsername().equals(principal.getName())) {
             this.questionService.incrementView(question);
         }
         Page<Answer> paging = this.answerService.getList(page, question, so);
@@ -66,8 +82,9 @@ public class QuestionController {
      * th:object에 의해 QuestionForm 객체가 필요하기 때문이다.
      */
     @PreAuthorize("isAuthenticated()") //로그아웃 상태에서는 로그인 페이지로 간다.
-    @GetMapping("/create")
-    public String questionCreate(QuestionForm questionForm) {
+    @GetMapping("/create/{category}")
+    public String questionCreate(Model model, @PathVariable("category") String category, QuestionForm questionForm) {
+        model.addAttribute("category", category);
         return "question_form";
     }
 
@@ -77,17 +94,24 @@ public class QuestionController {
      * @Vaild는 @NotEmpty, @Size 검증 BindingResult는 이로 인해 검증이 수행된 결과를 의미하는 객체
      */
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/create")
-    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult, Principal principal) {
+    @PostMapping("/create/{category}")
+    public String questionCreate(
+            Model model,
+            @PathVariable("category") String category,
+            @Valid QuestionForm questionForm,
+            BindingResult bindingResult,
+            Principal principal) {
 
         //자동으로 QuestionForm의 subject, content에 바인딩된다. (스프링 프레임 워크의 바인딩 기능)
         if (bindingResult.hasErrors()) {
+            model.addAttribute("category", category);
             return "question_form";
         }
 
         SiteUser author = this.userService.getUser(principal.getName());
-        this.questionService.create(questionForm.getSubject(), questionForm.getContent(), author);
-        return "redirect:/question/list";
+        Category category1 = this.categoryService.getCategoryByTitle(category);
+        this.questionService.create(questionForm.getSubject(), questionForm.getContent(), author, category1);
+        return "redirect:/question/list/"+category;
     }
 
     @PreAuthorize("isAuthenticated()")

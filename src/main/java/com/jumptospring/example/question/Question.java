@@ -1,5 +1,6 @@
 package com.jumptospring.example.question;
 
+import com.jumptospring.example.category.Category;
 import com.jumptospring.example.answer.Answer;
 import com.jumptospring.example.comment.Comment;
 import com.jumptospring.example.uesr.SiteUser;

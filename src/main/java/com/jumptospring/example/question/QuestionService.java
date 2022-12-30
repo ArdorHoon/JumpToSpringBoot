@@ -2,6 +2,7 @@ package com.jumptospring.example.question;
 
 
 import com.jumptospring.example.answer.Answer;
+import com.jumptospring.example.category.Category;
 import com.jumptospring.example.error.DataNotFoundException;
 import com.jumptospring.example.uesr.SiteUser;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,17 @@ public class QuestionService {
         return this.questionRepository.findAll(spec, pageable);
     }
 
+//    public Page<Question> getListByCategory(int page, String kw, String category) {
+//        List<Sort.Order> sorts = new ArrayList<>();
+//        sorts.add(Sort.Order.desc("createDate"));
+//        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+//        Specification<Question> spec = search(kw);
+//        //순수 쿼리로 작성한 경우
+//        //return this.questionRepository.findAllByKeyword(kw, pageable);
+//        //Specification 사용한 경우
+//        return this.questionRepository.findAll(spec, pageable);
+//    }
+
     public Question getQuestion(Integer id) {
         Optional<Question> question = this.questionRepository.findById(id);
 
@@ -57,10 +69,11 @@ public class QuestionService {
         }
     }
 
-    public void create(String subject, String content, SiteUser author) {
+    public void create(String subject, String content, SiteUser author, Category category) {
         Question q = new Question();
         q.setSubject(subject);
         q.setContent(content);
+        q.setCategory(category);
         q.setCreateDate(LocalDateTime.now());
         q.setAuthor(author);
         this.questionRepository.save(q);
