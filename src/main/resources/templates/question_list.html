@@ -60,7 +60,7 @@
         </ul>
     </div>
     <!-- 페이징처리 끝 -->
-    <form th:action="@{/question/list}" method="get" id="searchForm">
+    <form th:action="@{|/question/list/${category}|}" method="get" id="searchForm">
         <input type="hidden" id="kw" name="kw" th:value="${kw}">
         <input type="hidden" id="page" name="page" th:value="${paging.number}">
     </form>

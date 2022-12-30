@@ -39,7 +39,9 @@ public class QuestionController {
                                  @RequestParam(value = "page", defaultValue = "0") int page,
                                  @PathVariable("category") String category,
                                  @RequestParam(value = "kw", defaultValue = "") String kw) {
-        Page<Question> paging = this.questionService.getList(page, kw);
+
+        Category category1 = this.categoryService.getCategoryByTitle(category);
+        Page<Question> paging = this.questionService.getList(page, kw, category1);
         //Model 객체는 자바 클래스와 템플릿 간의 연결고리 역할을 한다. Model 객체에 값을 담아두면 템플릿에서 그 값을 사용할 수 있다.
         model.addAttribute("paging", paging);
         model.addAttribute("kw", kw);
