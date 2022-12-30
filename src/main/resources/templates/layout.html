@@ -27,11 +27,20 @@
         </div>
     </div>
 </div>
-
+<!-- JQuery-->
+<script th:src="@{/jquery-3.6.3.min.js}"></script>
 <!-- Bootstrap JS -->
 <script th:src="@{/bootstrap.min.js}"></script>
 <!-- 자바스크립트 Start -->
 <th:block layout:fragment="script"></th:block>
 <!-- 자바스크립트 End -->
+<script>
+    $('.list-group-item').on('click', function() {
+        var $this = $(this);
+
+        $('.active').removeClass('active');
+        $this.toggleClass('active')
+    })
+</script>
 </body>
 </html>
