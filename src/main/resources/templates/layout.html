@@ -31,13 +31,6 @@
 <script th:src="@{/jquery-3.6.3.min.js}"></script>
 <!-- Bootstrap JS -->
 <script th:src="@{/bootstrap.min.js}"></script>
-<script>
-    $('.category-group').on('click',function(e){
-        var previous = $(this).closest(".list-group").children(".active");
-        previous.removeClass('active'); // previous list-item
-        $(e.target).addClass('active'); // activated list-item
-    });
-</script>
 <!-- 자바스크립트 Start -->
 <th:block layout:fragment="script"></th:block>
 <!-- 자바스크립트 End -->

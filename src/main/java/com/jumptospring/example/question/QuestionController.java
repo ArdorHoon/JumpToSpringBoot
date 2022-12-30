@@ -49,7 +49,6 @@ public class QuestionController {
         return "question_list";
     }
 
-
     @RequestMapping(value = "/detail/{id}")
     public String detail(Model model,
                          @RequestParam(value = "so", defaultValue = "recent") String so,

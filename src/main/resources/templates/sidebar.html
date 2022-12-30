@@ -1,13 +1,10 @@
 <nav th:fragment="sidebarFragment" class="border-top border-secondary">
   <div class="list-group">
-    <a class="category-group rounded-0 list-group-item list-group-item-action list-group-item-light active" th:href="@{/question/list/qna}">질문과답변</a>
-    <a class="category-group rounded-0 list-group-item list-group-item-action list-group-item-light " th:href="@{/question/list/free}">자유게시판</a>
-    <!--
-    <a class="rounded-0 list-group-item list-group-item-action list-group-item-light " href="/pybo/question/list/tip/">팁과강좌</a>
-    <a class="rounded-0 list-group-item list-group-item-action list-group-item-light " href="/pybo/question/list/quiz/">파이썬퀴즈</a>
-    <a class="rounded-0 list-group-item list-group-item-action list-group-item-light " href="/pybo/question/list/news/">새로운소식</a>
-    <a class="rounded-0 list-group-item list-group-item-action list-group-item-light " href="/pybo/question/list/job/">구인구직</a>
-    -->
-    <a class="category-group rounded-0 list-group-item list-group-item-action list-group-item-light " th:href="@{/question/list/bug}">버그및건의</a>
+    <a class="category-group rounded-0 list-group-item list-group-item-action list-group-item-light" th:classappend="${category} == 'qna' ? 'active'"
+       th:href="@{/question/list/qna}">질문과답변</a>
+    <a class="category-group rounded-0 list-group-item list-group-item-action list-group-item-light" th:classappend="${category} == 'free' ? 'active'"
+       th:href="@{/question/list/free}">자유게시판</a>
+    <a class="category-group rounded-0 list-group-item list-group-item-action list-group-item-light" th:classappend="${category} == 'bug' ? 'active'"
+       th:href="@{/question/list/bug}">버그및건의</a>
   </div>
 </nav>
