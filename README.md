@@ -1,6 +1,6 @@
 # Jump To Spring Boot - 게시판 만들기 
-
-강의 페이지 : https://wikidocs.net/book/7601
+점프 투 스프링부트의 **3-15 SBB 추가 기능**을 참고하여 기능을 확장했습니다.
+<br><br>강의 페이지 : https://wikidocs.net/book/7601
 
 
 ## Application 화면
