@@ -15,7 +15,7 @@
 - [x] 마크다운 에디터 
 - [x] 비밀번호 변경
 
-## Skill
+## Libraries
 * Spring Boot
 * H2
 * BootStrap
